@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+  <style>
+    /* Animate background image colors */
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-image: url('sukuna.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1;
+      filter: hue-rotate(0deg);
+      animation: colorChange 10s infinite linear;
+    }
+
+    @keyframes colorChange {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .login-box {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      color: #fff;
+      width: 300px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+
+    input[type="submit"] {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #e60000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background"></div> <!-- Color-changing background -->
+
+  <div class="login-box">
+    <h2>Login</h2>
+    <form onsubmit="return validateLogin(event)">
+      <input type="text" id="username" placeholder="Username" required><br>
+      <input type="password" id="password" placeholder="Password" required><br>
+      <input type="submit" value="Login">
+    </form>
+    <p id="message" style="color: yellow; margin-top: 10px;"></p>
+  </div>
+
+  <script>
+    function validateLogin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username === 'admin' && password === 'admin') {
+        window.location.href = 'index.html';
+        return true;
+      } else {
+        document.getElementById('message').textContent = "Incorrect username or password.";
+        return false;
+      }
+    }
+  </script>
+
+</body>
+</html>

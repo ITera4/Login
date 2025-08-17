@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Name Comparison</title>
+  <style>
+    body {
+      margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Gradient animation setup */
+  background: linear-gradient(270deg, #a3cef1, #235789, #a3cef1);
+  background-size: 600% 600%;
+  animation: gradientShift 15s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  animation-fill-mode: forwards;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px 40px;
+      border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      color: #2c3e50;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #34495e;
+    }
+
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      resize: vertical;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button,
+    .back-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    button:hover,
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #2d3436;
+      text-align: left;
+    }
+
+    strong {
+      color: #007bff;
+    }
+
+    hr {
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Compare Names: Kumosoft vs NDMU</h1>
+
+    <label for="kumosoftInput">Kumosoft Names (comma-separated):</label>
+    <input type="text" id="kumosoftInput" placeholder="e.g. Alice, Bob, Charlie"/>
+
+    <label for="ndmuInput">NDMU Names (comma-separated):</label>
+    <textarea id="ndmuInput" rows="6" placeholder="e.g. Charlie, Emma, Frank"></textarea>
+
+    <div class="button-group">
+      <button onclick="compareNames()">Compare</button>
+      <a href="index.html" class="back-button">← Back to Home</a>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    function compareNames() {
+      const kumosoftRaw = document.getElementById('kumosoftInput').value;
+      const ndmuRaw = document.getElementById('ndmuInput').value;
+
+      const kumosoft = kumosoftRaw
+        .split(',')
+        .map(name => name.trim().toLowerCase())
+        .filter(Boolean);
+
+      const ndmu = ndmuRaw
+        .split(',')
+        .map(name => name.trim().toLowerCase())
+        .filter(Boolean);
+
+      const kumoSet = new Set(kumosoft);
+      const ndmuSet = new Set(ndmu);
+
+      const commonNames = kumosoft.filter(name => ndmuSet.has(name));
+      const onlyInKumo = kumosoft.filter(name => !ndmuSet.has(name));
+      const onlyInNdmu = ndmu.filter(name => !kumoSet.has(name));
+
+      const formatList = list => [...new Set(list)]
+        .map(name => name.charAt(0).toUpperCase() + name.slice(1))
+        .sort();
+
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = `
+        <p><strong>Common names</strong> between Kumosoft and NDMU:</p>
+        <p>${formatList(commonNames).join(', ') || 'None'}</p>
+        <p><strong>Total matches:</strong> ${commonNames.length}</p>
+
+        <hr>
+
+        <p><strong>Names only in Kumosoft:</strong></p>
+        <p>${formatList(onlyInKumo).join(', ') || 'None'}</p>
+        <p><strong>Total:</strong> ${onlyInKumo.length}</p>
+
+        <hr>
+
+        <p><strong>Names only in NDMU:</strong></p>
+        <p>${formatList(onlyInNdmu).join(', ') || 'None'}</p>
+        <p><strong>Total:</strong> ${onlyInNdmu.length}</p>
+      `;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Last Name Extractor - Professional Design</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body, html {
+      height: 100%;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      user-select: none;
+    }
+    .container {
+      position: relative; /* needed for absolute positioning inside */
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 30px 40px;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      text-align: center;
+      user-select: text;
+    }
+    h1 {
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 25px;
+      font-size: 1rem;
+      color: #d0d7e3;
+      font-weight: 500;
+    }
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      resize: vertical;
+      outline: none;
+      background-color: rgba(255,255,255,0.15);
+      color: #fff;
+      font-family: inherit;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+    }
+    textarea::placeholder {
+      color: #cfd6e6cc;
+      font-style: italic;
+    }
+    textarea:focus {
+      background-color: rgba(255,255,255,0.3);
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+    }
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 12px 25px;
+      margin: 12px 10px 0 10px;
+      color: white;
+      background: linear-gradient(90deg, #4a90e2, #357ABD);
+      box-shadow: 0 4px 12px rgba(53,122,189,0.6);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      min-width: 140px;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #357ABD, #4a90e2);
+      box-shadow: 0 6px 20px rgba(53,122,189,0.8);
+    }
+    button:active {
+      background: linear-gradient(90deg, #2a5298, #1e3c72);
+      box-shadow: 0 2px 8px rgba(30,60,114,0.9);
+    }
+    #copyBtn {
+      background: linear-gradient(90deg, #28a745, #218838);
+      box-shadow: 0 4px 12px rgba(33,136,56,0.6);
+    }
+    #copyBtn:hover {
+      background: linear-gradient(90deg, #218838, #28a745);
+      box-shadow: 0 6px 20px rgba(33,136,56,0.8);
+    }
+    #copyBtn:active {
+      background: linear-gradient(90deg, #19692c, #14591f);
+      box-shadow: 0 2px 8px rgba(20,89,31,0.9);
+    }
+    #result {
+      margin-top: 25px;
+      max-width: 600px;
+      width: 100%;
+      font-size: 1.2rem;
+      color: #e0e6f2;
+      min-height: 40px;
+      word-wrap: break-word;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      user-select: all;
+      line-height: 1.5;
+      background-color: rgba(255,255,255,0.1);
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+    }
+    .btn-group {
+      margin-top: 10px;
+    }
+    /* Move the next page button to the top right */
+    #nextPageBtn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: linear-gradient(90deg, #ff8c00, #e67300);
+      box-shadow: 0 4px 12px rgba(230,115,0,0.6);
+      margin: 0;
+      min-width: 160px;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      user-select: none;
+      border-radius: 8px;
+      font-weight: 600;
+      color: white;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      z-index: 10;
+    }
+    #nextPageBtn:hover {
+      background: linear-gradient(90deg, #e67300, #ff8c00);
+      box-shadow: 0 6px 20px rgba(230,115,0,0.8);
+    }
+    #nextPageBtn:active {
+      background: linear-gradient(90deg, #b35b00, #804000);
+      box-shadow: 0 2px 8px rgba(128,64,0,0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Last Name Extractor">
+    <button id="nextPageBtn" onclick="goToNextPage()" aria-label="Go to Name Comparer page">Compare Names</button>
+    <h1>Last Name Extractor</h1>
+    <p>MARCJAN SIMPLE PROJECT</p>
+    <textarea id="fullnames" aria-label="Input full names, one per line" placeholder='e.g.
+"Alfonso, Danwin A."
+"Apostol, Kirk Hammet D."
+"Benito, Prince Hameer C.*"
+"Apostol, Karen L."
+"Alfonso, Anna M."
+'></textarea>
+    <div class="btn-group">
+      <button onclick="extractAndShow()" aria-label="Extract last names">Extract Last Names</button>
+      <button onclick="copyLastNames()" id="copyBtn" style="display: none;" aria-label="Copy all extracted last names">Copy Last Names</button>
+    </div>
+    <div id="result" aria-live="polite" aria-atomic="true" role="region"></div>
+  </div>
+
+<script>
+  let displayedNames = [];
+
+  function extractAndShow() {
+    const input = document.getElementById('fullnames').value.trim();
+    const lines = input.split('\n');
+
+    const entries = [];
+
+    lines.forEach(line => {
+      let cleaned = line.replace(/["*\.]/g, '').trim();
+      if (!cleaned) return;
+
+      let lastName = '';
+      let firstName = '';
+
+      if (cleaned.includes(',')) {
+        const parts = cleaned.split(',');
+        lastName = parts[0].trim();
+        firstName = parts[1] ? parts[1].trim().split(/\s+/)[0] : '';
+      } else {
+        const words = cleaned.split(/\s+/);
+        if (words.length >= 1) {
+          lastName = words[words.length - 1];
+          firstName = words[0];
+        }
+      }
+
+      if (lastName) {
+        lastName = capitalize(lastName);
+        firstName = capitalize(firstName);
+        entries.push({ lastName, firstName });
+      }
+    });
+
+    const countMap = {};
+    entries.forEach(e => {
+      countMap[e.lastName] = (countMap[e.lastName] || 0) + 1;
+          });
+
+    const displayNames = entries.map(e => {
+      if (countMap[e.lastName] > 1) {
+        return `${e.lastName}, ${e.firstName}`;
+      } else {
+        return e.lastName;
+      }
+    });
+
+    displayedNames = displayNames
+      .filter(name => name)
+      .sort((a,b) => a.localeCompare(b));
+
+    const copyBtn = document.getElementById('copyBtn');
+    copyBtn.style.display = displayedNames.length > 0 ? 'inline-block' : 'none';
+
+    const resultContainer = document.getElementById('result');
+    resultContainer.textContent = displayedNames.join(', ');
+  }
+
+  function copyLastNames() {
+    if (displayedNames.length === 0) return;
+    const textToCopy = displayedNames.join(', ');
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      alert('Last names copied to clipboard!');
+    }).catch(err => {
+      alert('Failed to copy: ' + err);
+    });
+  }
+
+  function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  function goToNextPage() {
+    window.location.href = 'name_comparer.html';
+  }
+</script>
+</body>
+</html>
